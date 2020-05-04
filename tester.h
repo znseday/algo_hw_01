@@ -8,10 +8,13 @@
 #include <iostream>
 #include <fstream>
 #include <experimental\filesystem>
+#include <chrono>
 
 #include "itask.h"
 
 namespace fs = std::experimental::filesystem;
+
+using ClockType = std::chrono::steady_clock;
 
 class Tester
 {
@@ -20,6 +23,7 @@ protected:
     std::string Path;
     bool ShowExpects = false;
     bool ShowActuals = false;
+    bool ShowTime = false;
 
 public:
     Tester() = delete;
@@ -27,6 +31,7 @@ public:
 
     void SetShowExpects(bool _showExpects) {ShowExpects = _showExpects;}
     void SetShowActuals(bool _showActuals) {ShowActuals = _showActuals;}
+    void SetShowTime(bool _showTime) {ShowTime = _showTime;}
 
     void RunTests()
     {
@@ -58,7 +63,17 @@ public:
         if (ShowExpects)
             std::cout << "expect = " << expect << std::endl;
 
+        std::chrono::time_point<ClockType> TimeStart = ClockType::now();
+
         std::string actual = Task.Run(data);
+
+        std::chrono::time_point<ClockType> TimeEnd = ClockType::now();
+
+        double Time = (double)std::chrono::duration_cast<std::chrono::microseconds>(TimeEnd - TimeStart).count();
+        Time /= 1.0e6;
+
+        if (ShowTime)
+            std::cout << "Time, s = " << Time << std::endl;
 
         if (ShowActuals)
             std::cout << "actual = " << actual << std::endl;

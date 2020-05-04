@@ -23,6 +23,7 @@ int main()
 
 //    testerTickets.SetShowExpects(true);
 //    testerTickets.SetShowActuals(true);
+    testerTickets.SetShowTime(true);
     testerTickets.RunTests();
 
     return 0;

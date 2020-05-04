@@ -11,34 +11,39 @@ using namespace std;
 // Вывод результата: количество 2N-значных счастливых билетов.
 
 
-//size_t CalcSum(size_t num) // for SolveNaive
-//{
-//    size_t sum = 0;
-//    do
-//    {
-//        sum += num % 10;
-//        num /= 10;
-//    } while (num);
+size_t CalcSum(size_t num) // for SolveNaive
+{
+    size_t sum = 0;
+    do
+    {
+        sum += num % 10;
+        num /= 10;
+    } while (num);
 
-//    return sum;
-//}
+    return sum;
+}
 
-//long long SolveNaive(size_t N)
-//{
-//    long long res = 0;
-//    size_t maxNum = pow(10, N);
-//    for (size_t i = 0; i < maxNum; ++i)
-//        for (size_t j = 0; j < maxNum; ++j)
-//            if ( CalcSum(i) == CalcSum(j) )
-//                ++res;
-//    return res;
-//}
+long long SolveNaive(size_t N)
+{
+    long long res = 0;
+    size_t maxNum = pow(10, N);
+    double Sum_i;
+    for (size_t i = 0; i < maxNum; ++i)
+    {
+        Sum_i = CalcSum(i);
+        for (size_t j = 0; j < maxNum; ++j)
+            if ( Sum_i == CalcSum(j) )
+                ++res;
+    }
+    return res;
+}
 
 
 vector<long long> CreateArr(const vector<long long> &_prevArr) // for SolveViaTable
 {
     size_t newLen =  _prevArr.size() + 9;
     vector<long long> resArr;
+    resArr.reserve(newLen);
 
     for (size_t i = 0; i < newLen; ++i)
     {
@@ -46,6 +51,7 @@ vector<long long> CreateArr(const vector<long long> &_prevArr) // for SolveViaTa
         for (size_t j = 0; j < 10; ++j)
             if ( fabs(i-j) >= 0 && fabs(i-j) < _prevArr.size() )
                 val += _prevArr[i-j];
+
         resArr.emplace_back(val);
     }
     return resArr;
